@@ -1,21 +1,13 @@
 # Gig
 
-**TODO: Add description**
+With Gig you can monitor gigs near your location, accessing more data about your favourite artists.
 
-## Installation
+# Development
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `gig` to your list of dependencies in `mix.exs`:
+Install dependencies with `mix deps.get`.
 
-```elixir
-def deps do
-  [
-    {:gig, "~> 0.1.0"}
-  ]
-end
-```
+Requires an environment variable called `SONGKICK_API_TOKEN`.
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/gig](https://hexdocs.pm/gig).
+E.g.
 
+`SONGKICK_API_TOKEN=<my-token> iex -S mix`
