@@ -26,7 +26,7 @@ defmodule Gig.Mixfile do
       {:httpotion, "~> 3.0"},
       {:poison, "~> 3.1"},
       {:recipe, "~> 0.4.3"},
-      {:ex_doc, "~> 0.16.1", only: :docs, runtime: false},
+      {:ex_doc, "~> 0.16.1", only: :dev, runtime: false},
       {:credo, "~> 0.8.1", only: :dev, runtime: false},
       {:dialyxir, "~> 0.5.0", only: :dev, runtime: false}
     ]
