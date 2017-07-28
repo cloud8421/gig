@@ -23,9 +23,10 @@ defmodule Gig.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-     {:ex_doc, "~> 0.16.1", only: :docs, runtime: false},
-     {:credo, "~> 0.8.1", only: :dev, runtime: false},
-     {:dialyxir, "~> 0.5.0", only: :dev, runtime: false}
+      {:httpotion, "~> 3.0"},
+      {:ex_doc, "~> 0.16.1", only: :docs, runtime: false},
+      {:credo, "~> 0.8.1", only: :dev, runtime: false},
+      {:dialyxir, "~> 0.5.0", only: :dev, runtime: false}
     ]
   end
 end
