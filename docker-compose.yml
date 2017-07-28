@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  gig:
+    env_file: .env
+    image: elixir:1.5.0
+    build: .
+    command: mix run --no-halt
+    volumes:
+      - .:/app
