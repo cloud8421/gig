@@ -39,7 +39,7 @@ defmodule Gig.Songkick.Location do
   %Gig.Songkick.Location{area: "London", country: "UK", id: 24426,
                          lat: 51.5333, lng: -0.1, name: "Islington"}
   """
-  @spec from_api_response(map) :: Location.t
+  @spec from_api_response(map) :: t
   def from_api_response(location_map) do
     %{"lat" => lat,
       "lng" => lng,

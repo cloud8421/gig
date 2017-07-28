@@ -12,24 +12,20 @@ defmodule Gig.Songkick.ApiClient do
   @type lat :: float
   @type lng :: float
 
-  @spec search_location(lat, lng) :: {:ok, [map]} | {:error, term}
-  def search_location(lat, lng) do
+  @spec search_locations(lat, lng) :: {:ok, map} | {:error, term}
+  def search_locations(lat, lng) do
     path = "/search/locations.json"
     params = default_params()
              |> Map.put(:location, "geo:#{lat},#{lng}")
 
     case HTTPotion.get(@base_url <> path, query: params) do
       %Response{status_code: 200, body: body} ->
-        {:ok, Poison.decode!(body) |> extract_locations}
+        Poison.decode(body)
       %Response{status_code: status_code, body: body} ->
         {:error, {status_code, body}}
       %ErrorResponse{message: message} ->
-        {:error, message}
+        message
     end
-  end
-
-  defp extract_locations(response_map) do
-    get_in(response_map, ["resultsPage", "results", "location"])
   end
 
   defp default_params do
