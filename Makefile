@@ -1,4 +1,7 @@
-.PHONY: test iex deps.get
+.PHONY: compile test iex deps.get
+
+compile:
+	docker-compose run gig mix compile
 
 test:
 	docker-compose run gig mix test
@@ -8,3 +11,6 @@ iex:
 
 deps.get:
 	docker-compose run gig mix deps.get
+
+docs:
+	docker-compose run gig mix docs
