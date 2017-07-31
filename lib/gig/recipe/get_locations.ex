@@ -37,7 +37,7 @@ defmodule Gig.Recipe.GetLocations do
     state = Recipe.initial_state()
             |> Recipe.assign(:coords, {lat, lng})
 
-    Recipe.run(__MODULE__, state)
+    Gig.Recipe.run(__MODULE__, state)
   end
 
   @doc false

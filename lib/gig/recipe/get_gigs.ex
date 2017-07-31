@@ -37,7 +37,7 @@ defmodule Gig.Recipe.GetGigs do
     state = Recipe.initial_state()
             |> Recipe.assign(:location_id, location_id)
 
-    Recipe.run(__MODULE__, state)
+    Gig.Recipe.run(__MODULE__, state)
   end
 
   @doc false
