@@ -12,8 +12,9 @@ defmodule Gig.Songkick.Location do
 
   @type lat :: float
   @type lng :: float
+  @type id :: pos_integer
 
-  @type t :: %__MODULE__{id: nil | pos_integer,
+  @type t :: %__MODULE__{id: nil | id,
                          name: nil | String.t,
                          area: nil | String.t,
                          lat: lat,

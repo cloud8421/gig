@@ -9,6 +9,7 @@ defmodule Gig.Songkick.ApiClient do
   alias HTTPotion.{Response,
                    ErrorResponse}
 
+  @type location_id :: pos_integer
   @type lat :: float
   @type lng :: float
 
@@ -18,6 +19,17 @@ defmodule Gig.Songkick.ApiClient do
     params = default_params()
              |> Map.put(:location, "geo:#{lat},#{lng}")
 
+    do_get(path, params)
+  end
+
+  @spec get_gigs(location_id) :: {:ok, map} | {:error, term}
+  def get_gigs(location_id) do
+    path = "/metro_areas/#{location_id}/calendar.json"
+
+    do_get(path, default_params())
+  end
+
+  def do_get(path, params) do
     case HTTPotion.get(@base_url <> path, query: params) do
       %Response{status_code: 200, body: body} ->
         Poison.decode(body)
