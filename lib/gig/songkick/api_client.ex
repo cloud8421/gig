@@ -10,6 +10,7 @@ defmodule Gig.Songkick.ApiClient do
                    ErrorResponse}
 
   @type location_id :: pos_integer
+  @type artist_id :: pos_integer
   @type lat :: float
   @type lng :: float
 
@@ -25,6 +26,13 @@ defmodule Gig.Songkick.ApiClient do
   @spec get_gigs(location_id) :: {:ok, map} | {:error, term}
   def get_gigs(location_id) do
     path = "/metro_areas/#{location_id}/calendar.json"
+
+    do_get(path, default_params())
+  end
+
+  @spec get_artist(artist_id) :: {:ok, map} | {:error, term}
+  def get_artist(artist_id) do
+    path = "/artists/#{artist_id}.json"
 
     do_get(path, default_params())
   end
