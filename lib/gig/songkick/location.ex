@@ -1,6 +1,6 @@
 defmodule Gig.Songkick.Location do
   @moduledoc """
-  This module represents a Songkick location, used as a basis to find events. 
+  This module represents a Songkick location, used as a basis to find events.
   """
 
   defstruct id: nil,

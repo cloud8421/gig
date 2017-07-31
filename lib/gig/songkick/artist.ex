@@ -9,17 +9,17 @@ defmodule Gig.Songkick.Artist do
     defstruct id: nil,
               name: nil
 
-    @type t :: %__MODULE__{id: nil | Artist.id,
+    @type t :: %__MODULE__{id: nil | Gig.Songkick.Artist.id,
                            name: nil | String.t}
 
     @doc """
     Takes a map with string keys of a short representation
-    of an artist and converts it to a `Gig.Songkick.Artist.Short.t` struct.
+    of an artist and converts it to a `t:Gig.Songkick.Artist.Short.t/0` struct.
 
-    iex> artist_map = %{"id" => 2588971,
-    ...>                "displayName" => "Public Service Broadcasting"}
-    iex> Gig.Songkick.Artist.Short.from_api_response(artist_map)
-    %Gig.Songkick.Artist.Short{id: 2588971, name: "Public Service Broadcasting"}
+        iex> artist_map = %{"id" => 2588971,
+        ...>                "displayName" => "Public Service Broadcasting"}
+        iex> Gig.Songkick.Artist.Short.from_api_response(artist_map)
+        %Gig.Songkick.Artist.Short{id: 2588971, name: "Public Service Broadcasting"}
     """
     @spec from_api_response(map) :: t
     def from_api_response(artist_map) do
@@ -41,24 +41,24 @@ defmodule Gig.Songkick.Artist do
 
     @type mbid :: String.t
 
-    @type t :: %__MODULE__{id: nil | Artist.id,
+    @type t :: %__MODULE__{id: nil | Gig.Songkick.Artist.id,
                            mbid: nil | mbid,
                            name: nil | String.t}
 
     @doc """
     Takes a map with string keys of a short representation
-    of an artist and converts it to a `Gig.Songkick.Artist.Short.t` struct.
+    of an artist and converts it to a `t:Gig.Songkick.Artist.Long.t/0` struct.
 
-    iex> artist_map = %{"id" => 2588971,
-    ...>                "identifier" => [%{"eventsHref" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d/calendar.json",
-    ...>                   "href" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d.json",
-    ...>                   "mbid" => "93834e82-3a0b-4ec2-a2e4-6eca0a497e6d",
-    ...>                   "setlistsHref" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d/setlists.json"}],
-    ...>                "displayName" => "Public Service Broadcasting"}
-    iex> Gig.Songkick.Artist.Long.from_api_response(artist_map)
-    %Gig.Songkick.Artist.Long{id: 2588971,
-                              mbid: "93834e82-3a0b-4ec2-a2e4-6eca0a497e6d",
-                              name: "Public Service Broadcasting"}
+        iex> artist_map = %{"id" => 2588971,
+        ...>                "identifier" => [%{"eventsHref" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d/calendar.json",
+        ...>                   "href" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d.json",
+        ...>                   "mbid" => "93834e82-3a0b-4ec2-a2e4-6eca0a497e6d",
+        ...>                   "setlistsHref" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d/setlists.json"}],
+        ...>                "displayName" => "Public Service Broadcasting"}
+        iex> Gig.Songkick.Artist.Long.from_api_response(artist_map)
+        %Gig.Songkick.Artist.Long{id: 2588971,
+                                  mbid: "93834e82-3a0b-4ec2-a2e4-6eca0a497e6d",
+                                  name: "Public Service Broadcasting"}
     """
     @spec from_api_response(map) :: t
     def from_api_response(artist_map) do

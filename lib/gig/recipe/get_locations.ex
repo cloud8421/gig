@@ -34,10 +34,16 @@ defmodule Gig.Recipe.GetLocations do
   @spec run(Location.lat, Location.lng) :: {:ok, [Location.t]}
                                          | {:error, term}
   def run(lat, lng) do
-    state = Recipe.initial_state()
-            |> Recipe.assign(:coords, {lat, lng})
+    Gig.Recipe.run(__MODULE__, initial_state(lat, lng))
+  end
 
-    Gig.Recipe.run(__MODULE__, state)
+  @doc """
+  Returns the initial state for the recipe.
+  """
+  @spec initial_state(Location.lat, Location.lng) :: state
+  def initial_state(lat, lng) do
+    Recipe.initial_state()
+    |> Recipe.assign(:coords, {lat, lng})
   end
 
   @doc false

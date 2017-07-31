@@ -33,10 +33,16 @@ defmodule Gig.Recipe.GetArtist do
   @spec run(Artist.id) :: {:ok, Artist.Long.t}
                         | {:error, term}
   def run(artist_id) do
-    state = Recipe.initial_state()
-            |> Recipe.assign(:id, artist_id)
+    Gig.Recipe.run(__MODULE__, initial_state(artist_id))
+  end
 
-    Gig.Recipe.run(__MODULE__, state)
+  @doc """
+  Returns the initial state for the recipe.
+  """
+  @spec initial_state(Artist.t) :: state
+  def initial_state(artist_id) do
+    Recipe.initial_state()
+    |> Recipe.assign(:id, artist_id)
   end
 
   @doc false

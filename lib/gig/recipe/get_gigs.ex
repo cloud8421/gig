@@ -7,7 +7,8 @@ defmodule Gig.Recipe.GetGigs do
   use Recipe
 
   alias Gig.Songkick.{ApiClient,
-                      Event}
+                      Event,
+                      Location}
 
   @type step :: :fetch_data | :parse_gigs
   @type assigns :: %{location_id: Location.id,
@@ -34,10 +35,16 @@ defmodule Gig.Recipe.GetGigs do
   @spec run(Location.id) :: {:ok, [Location.t]}
                                          | {:error, term}
   def run(location_id) do
-    state = Recipe.initial_state()
-            |> Recipe.assign(:location_id, location_id)
+    Gig.Recipe.run(__MODULE__, initial_state(location_id))
+  end
 
-    Gig.Recipe.run(__MODULE__, state)
+  @doc """
+  Returns the initial state for the recipe.
+  """
+  @spec initial_state(Location.id) :: state
+  def initial_state(location_id) do
+    Recipe.initial_state()
+    |> Recipe.assign(:location_id, location_id)
   end
 
   @doc false
