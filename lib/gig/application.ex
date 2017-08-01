@@ -8,6 +8,7 @@ defmodule Gig.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
+      {Gig.Monitor.Supervisor, []}
       # Starts a worker by calling: Gig.Worker.start_link(arg)
       # {Gig.Worker, arg},
     ]

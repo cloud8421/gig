@@ -19,6 +19,14 @@ defmodule Gig.Monitor do
               artists_with_mbid: []
   end
 
+  def child_spec(_) do
+    %{id: __MODULE__,
+      start: {__MODULE__, :start_link, []},
+      restart: :transient,
+      shutdown: 5000,
+      type: :worker}
+  end
+
   def start_link(lat, lng) do
     GenServer.start_link(__MODULE__, {lat, lng})
   end
