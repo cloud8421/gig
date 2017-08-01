@@ -27,8 +27,12 @@ defmodule Gig.Monitor do
       type: :worker}
   end
 
+  def via(lat, lng) do
+    {:via, Registry, {Registry.Monitor, {lat, lng}}}
+  end
+
   def start_link(lat, lng) do
-    GenServer.start_link(__MODULE__, {lat, lng})
+    GenServer.start_link(__MODULE__, {lat, lng}, name: via(lat, lng))
   end
 
   def init(coords) do

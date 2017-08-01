@@ -1,18 +1,15 @@
 defmodule Gig do
   @moduledoc """
-  Documentation for Gig.
+  This module exposes the top-level apis
+  for the Gig application.
   """
 
-  @doc """
-  Hello world.
+  def start_monitoring(lat, lng) do
+    Gig.Monitor.Supervisor.start_child(lat, lng)
+  end
 
-  ## Examples
-
-      iex> Gig.hello
-      :world
-
-  """
-  def hello do
-    :world
+  def stop_monitoring(lat, lng) do
+    Gig.Monitor.Supervisor.terminate_child(lat, lng)
+    :ok
   end
 end

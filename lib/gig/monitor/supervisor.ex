@@ -8,6 +8,15 @@ defmodule Gig.Monitor.Supervisor do
     Supervisor.start_child(__MODULE__, [lat, lng])
   end
 
+  def terminate_child(lat, lng) do
+    case Registry.lookup(Registry.Monitor, {lat, lng}) do
+      [] ->
+        {:error, :not_found}
+      [{pid, _meta}] ->
+        terminate_child(pid)
+    end
+  end
+
   def terminate_child(pid) do
     Supervisor.terminate_child(__MODULE__, pid)
   end
