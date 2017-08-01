@@ -16,7 +16,7 @@ defmodule Gig.Songkick.Event do
 
   @type t :: %__MODULE__{id: nil | id,
                          name: nil | String.t,
-                         artists: [Artist.Short.t],
+                         artists: [Artist.t],
                          venue: Venue.t,
                          starts_at: :not_available | DateTime.t | Date.t}
 
@@ -61,10 +61,12 @@ defmodule Gig.Songkick.Event do
       ...>                        "uri" => "http://www.songkick.com/metro_areas/24426-uk-london?utm_source=41376&utm_medium=partner"},
       ...>                      "uri" => "http://www.songkick.com/venues/37414-o2-forum-kentish-town?utm_source=41376&utm_medium=partner"}}
       iex> Gig.Songkick.Event.from_api_response(event_response)
-      %Gig.Songkick.Event{artists: [%Gig.Songkick.Artist.Short{id: 214430,
-                                                               name: "Yngwie Malmsteen"},
-                                    %Gig.Songkick.Artist.Short{id: 981795,
-                                                               name: "Immension"}],
+      %Gig.Songkick.Event{artists: [%Gig.Songkick.Artist{id: 214430,
+                                                         mbid: "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
+                                                         name: "Yngwie Malmsteen"},
+                                    %Gig.Songkick.Artist{id: 981795,
+                                                         mbid: nil,
+                                                         name: "Immension"}],
                           id: 29280759,
                           name: "Yngwie Malmsteen with Immension at O2 Forum Kentish Town (August 2, 2017)",
                           starts_at: %DateTime{calendar: Calendar.ISO, day: 2, hour: 18, microsecond: {0, 0}, minute: 0,
@@ -94,7 +96,7 @@ defmodule Gig.Songkick.Event do
     artists_data = get_in(event_map, ["performance",
                                       Access.all(),
                                       "artist"])
-    Enum.map(artists_data, &Artist.Short.from_api_response/1)
+    Enum.map(artists_data, &Artist.from_api_response/1)
   end
 
   defp get_venue(event_map) do

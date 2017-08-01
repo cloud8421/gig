@@ -10,7 +10,7 @@ defmodule Gig.Recipe.GetReleases do
                      Release}
 
   @type step :: :fetch_data | :parse_releases
-  @type assigns :: %{id: Artist.Long.mbid,
+  @type assigns :: %{id: Artist.mbid,
                      response: map,
                      releases: [Release.t]}
   @type state :: %Recipe{assigns: assigns}
@@ -31,7 +31,7 @@ defmodule Gig.Recipe.GetReleases do
   @doc """
   Given an artist MusicBrainz id, return their releases
   """
-  @spec run(Artist.Long.mbid) :: {:ok, [Release.t]}
+  @spec run(Artist.mbid) :: {:ok, [Release.t]}
                              | {:error, term}
   def run(artist_mbid) do
     Gig.Recipe.run(__MODULE__, initial_state(artist_mbid))
@@ -40,7 +40,7 @@ defmodule Gig.Recipe.GetReleases do
   @doc """
   Returns the initial state for the recipe.
   """
-  @spec initial_state(Artist.Long.mbid) :: state
+  @spec initial_state(Artist.mbid) :: state
   def initial_state(artist_mbid) do
     Recipe.initial_state()
     |> Recipe.assign(:id, artist_mbid)

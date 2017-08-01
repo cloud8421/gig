@@ -4,19 +4,19 @@ defmodule Gig.Songkick.Venue do
   takes place.
   """
 
-  alias Gig.Songkick.Location
-
   defstruct id: nil,
             name: nil,
             lat: 0.0,
             lng: 0.0
 
   @type id :: pos_integer
+  @type lat :: float
+  @type lng :: float
 
   @type t :: %__MODULE__{id: nil | id,
                          name: nil | String.t,
-                         lat: Location.lat,
-                         lng: Location.lng}
+                         lat: lat,
+                         lng: lng}
 
     @doc """
     Takes a map with string keys of a venue
