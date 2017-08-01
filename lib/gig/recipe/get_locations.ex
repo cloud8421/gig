@@ -3,6 +3,11 @@ defmodule Gig.Recipe.GetLocations do
   This recipe takes a latitude and longitude
   and returns a list of Songkick locations close to the
   specified coordinates.
+
+  Songkick returns multiple locations that map to the same
+  metro area id. This id is what's used to resolve gigs for
+  a specific location, so this recipe dedupes the returned locations
+  so that it returnes only one location per id.
   """
   use Recipe
 
@@ -22,7 +27,9 @@ defmodule Gig.Recipe.GetLocations do
 
   @doc false
   @spec handle_result(state) :: [Location.t]
-  def handle_result(state), do: state.assigns.locations
+  def handle_result(state) do
+    Enum.uniq_by(state.assigns.locations, fn(l) -> l.id end)
+  end
 
   @doc false
   @spec handle_error(step, term, state) :: term
