@@ -14,9 +14,7 @@ defmodule Gig.Monitor do
     @moduledoc false
 
     defstruct coords: {0, 0},
-              metro_area: nil,
-              events: [],
-              artists_with_mbid: []
+              metro_area: nil
   end
 
   def child_spec(_) do
@@ -45,17 +43,22 @@ defmodule Gig.Monitor do
     {lat, lng} = state.coords
     case Gig.Recipe.GetEvents.run(lat, lng) do
       {:ok, _correlation_id, {metro_area, events}} ->
-        artists = events
-                  |> Enum.flat_map(fn(e) -> e.artists end)
-                  |> Enum.filter(fn(a) -> a.mbid end)
-                  |> Enum.uniq
+        save_refresh_data(events)
         Process.send_after(self(), :refresh, @refresh_interval)
-        {:noreply, %{state | metro_area: metro_area,
-                             events: events,
-                             artists_with_mbid: artists}}
+        {:noreply, %{state | metro_area: metro_area}}
       _error ->
         Process.send_after(self(), :refresh, @retry_interval)
         {:noreply, state}
     end
+  end
+
+  defp save_refresh_data(events) do
+    artists = events
+              |> Enum.flat_map(fn(e) -> e.artists end)
+              |> Enum.filter(fn(a) -> a.mbid end)
+              |> Enum.uniq
+
+    true = Gig.Store.save(Gig.Store.Event, events)
+    true = Gig.Store.save(Gig.Store.Artist, artists)
   end
 end

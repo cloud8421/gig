@@ -16,7 +16,8 @@ defmodule Gig.Mixfile do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Gig.Application, []}
+      mod: {Gig.Application, []},
+      start_phases: [create_store_tables: []]
     ]
   end
 
