@@ -22,3 +22,6 @@ erl_crash.dump
 # ENV file
 .env
 .envrc
+
+# IEX session settings
+.iex.exs
