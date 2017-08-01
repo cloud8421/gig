@@ -9,20 +9,26 @@ defmodule Gig.Recipe.GetEvents do
   alias Gig.Songkick.{ApiClient,
                       Event}
 
-  @type step :: :fetch_data | :parse_events
+  @type metro_area :: pos_integer
+  @type step :: :fetch_data | :parse_metro_area | :parse_events
   @type assigns :: %{coords: {ApiClient.lat, ApiClient.lng},
                      response: map,
+                     metro_area: metro_area,
                      events: []}
   @type state :: %Recipe{assigns: assigns}
+  @type success :: {metro_area, [Event.t]}
 
   @doc false
   @spec steps :: [step]
   def steps, do: [:fetch_data,
+                  :parse_metro_area,
                   :parse_events]
 
   @doc false
-  @spec handle_result(state) :: [Event.t]
-  def handle_result(state), do: state.assigns.events
+  @spec handle_result(state) :: success
+  def handle_result(state) do
+    {state.assigns.metro_area, state.assigns.events}
+  end
 
   @doc false
   @spec handle_error(step, term, state) :: term
@@ -31,8 +37,8 @@ defmodule Gig.Recipe.GetEvents do
   @doc """
   Given lat and lng, returns a list of Songkick events
   """
-  @spec run(ApiClient.lat, ApiClient.lng) :: {:ok, [Event.t]}
-                          | {:error, term}
+  @spec run(ApiClient.lat, ApiClient.lng) :: {:ok, success}
+                                           | {:error, term}
   def run(lat, lng) do
     Gig.Recipe.run(__MODULE__, initial_state(lat, lng))
   end
@@ -56,6 +62,15 @@ defmodule Gig.Recipe.GetEvents do
       error ->
         error
     end
+  end
+
+  @doc false
+  @spec parse_metro_area(state) :: {:ok, state}
+  def parse_metro_area(state) do
+    metro_area = get_in(state.assigns.response, ["resultsPage",
+                                                 "clientLocation",
+                                                 "metroAreaId"])
+    {:ok, Recipe.assign(state, :metro_area, metro_area)}
   end
 
   @doc false
