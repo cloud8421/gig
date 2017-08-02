@@ -1,4 +1,4 @@
-defmodule Gig.Monitor do
+defmodule Gig.Monitor.NewEvents do
   @moduledoc """
   Given a starting lat/lng, a `Gig.Monitor` process
   regularly monitors the available events for the specified

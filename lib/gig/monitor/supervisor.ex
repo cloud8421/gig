@@ -27,7 +27,7 @@ defmodule Gig.Monitor.Supervisor do
 
   def init(_) do
     children = [
-      Gig.Monitor
+      Gig.Monitor.NewEvents
     ]
 
     Supervisor.init(children, strategy: :simple_one_for_one)

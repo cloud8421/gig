@@ -1,7 +1,8 @@
-defmodule Gig.MonitorTest do
+defmodule Gig.Monitor.NewEventsTest do
   use ExUnit.Case
 
-  alias Gig.Support.Fixtures
+  alias Gig.{Monitor.NewEvents,
+             Support.Fixtures}
 
   defmodule SuccessRecipe do
     alias Gig.Support.Fixtures
@@ -60,7 +61,7 @@ defmodule Gig.MonitorTest do
   test "stores events for given lat/lng" do
     Gig.Store.clear(Gig.Store.Event)
 
-    {:ok, _} = Gig.Monitor.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
+    {:ok, _} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
 
     assert [Fixtures.event()] == Gig.Store.all(Gig.Store.Event)
   end
@@ -68,13 +69,13 @@ defmodule Gig.MonitorTest do
   test "stores artists with mbid" do
     Gig.Store.clear(Gig.Store.Artist)
 
-    {:ok, _} = Gig.Monitor.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
+    {:ok, _} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
 
     assert [Fixtures.artist_one()] == Gig.Store.all(Gig.Store.Artist)
   end
 
   test "tracks the metro area id" do
-    {:ok, pid} = Gig.Monitor.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
+    {:ok, pid} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
 
     process_state = :sys.get_state(pid)
 
@@ -85,8 +86,8 @@ defmodule Gig.MonitorTest do
     {:ok, _} = RefreshRecipe.start_link()
     Gig.Store.clear(Gig.Store.Event)
 
-    {:ok, _} = Gig.Monitor.start_link(0.1, 0.1, recipe_module: RefreshRecipe,
-                                                refresh_interval: 10)
+    {:ok, _} = NewEvents.start_link(0.1, 0.1, recipe_module: RefreshRecipe,
+                                              refresh_interval: 10)
 
     assert [] == Gig.Store.all(Gig.Store.Event)
 
@@ -99,8 +100,8 @@ defmodule Gig.MonitorTest do
     {:ok, _} = RetryRecipe.start_link()
     Gig.Store.clear(Gig.Store.Event)
 
-    {:ok, _} = Gig.Monitor.start_link(0.1, 0.1, recipe_module: RetryRecipe,
-                                                retry_interval: 10)
+    {:ok, _} = NewEvents.start_link(0.1, 0.1, recipe_module: RetryRecipe,
+                                              retry_interval: 10)
 
     assert [] == Gig.Store.all(Gig.Store.Event)
 
