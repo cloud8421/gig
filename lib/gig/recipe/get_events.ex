@@ -9,8 +9,12 @@ defmodule Gig.Recipe.GetEvents do
   alias Gig.Songkick.{ApiClient,
                       Event}
 
+  # Setup rate limit to 60 calls per minute
+  @rate_limit_scale 60_000
+  @rate_limit 60
+
   @type metro_area :: pos_integer
-  @type step :: :fetch_data | :parse_metro_area | :parse_events
+  @type step :: :check_rate_limit | :fetch_data | :parse_metro_area | :parse_events
   @type assigns :: %{coords: {ApiClient.lat, ApiClient.lng},
                      response: map,
                      metro_area: metro_area,
@@ -20,7 +24,8 @@ defmodule Gig.Recipe.GetEvents do
 
   @doc false
   @spec steps :: [step]
-  def steps, do: [:fetch_data,
+  def steps, do: [:check_rate_limit,
+                  :fetch_data,
                   :parse_metro_area,
                   :parse_events]
 
@@ -50,6 +55,17 @@ defmodule Gig.Recipe.GetEvents do
   def initial_state(lat, lng) do
     Recipe.initial_state()
     |> Recipe.assign(:coords, {lat, lng})
+  end
+
+  @doc false
+  @spec check_rate_limit(state) :: {:ok, state} | {:error, {:rate_limit_reached, pos_integer}}
+  def check_rate_limit(state) do
+    case ExRated.check_rate(__MODULE__, @rate_limit_scale, @rate_limit) do
+      {:ok, _} ->
+        {:ok, state}
+      {:error, limit} ->
+        {:error, {:rate_limit_reached, limit}}
+    end
   end
 
   @doc false
