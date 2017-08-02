@@ -6,6 +6,7 @@ defmodule Gig.Mixfile do
       app: :gig,
       version: "0.1.0",
       elixir: "~> 1.5",
+      elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       docs: [main: "readme", extras: ["README.md"]],
       deps: deps()
@@ -20,6 +21,9 @@ defmodule Gig.Mixfile do
       start_phases: [create_store_tables: []]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
