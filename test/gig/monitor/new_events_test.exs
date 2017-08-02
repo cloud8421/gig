@@ -1,12 +1,10 @@
 defmodule Gig.Monitor.NewEventsTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
 
   alias Gig.{Monitor.NewEvents,
              Support.Fixtures}
 
   defmodule SuccessRecipe do
-    alias Gig.Support.Fixtures
-
     def run(_lat, _lng) do
       {:ok, "correlation-id", {Fixtures.metro_area(), [Fixtures.event()]}}
     end
@@ -14,8 +12,6 @@ defmodule Gig.Monitor.NewEventsTest do
 
   defmodule RefreshRecipe do
     use GenServer
-
-    alias Gig.Support.Fixtures
 
     def start_link do
       GenServer.start_link(__MODULE__, 0, name: __MODULE__)
@@ -37,8 +33,6 @@ defmodule Gig.Monitor.NewEventsTest do
 
   defmodule RetryRecipe do
     use GenServer
-
-    alias Gig.Support.Fixtures
 
     def start_link do
       GenServer.start_link(__MODULE__, 0, name: __MODULE__)
@@ -63,6 +57,8 @@ defmodule Gig.Monitor.NewEventsTest do
 
     {:ok, _} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
 
+    wait_for_data_storage()
+
     assert [Fixtures.event()] == Gig.Store.all(Gig.Store.Event)
   end
 
@@ -70,6 +66,8 @@ defmodule Gig.Monitor.NewEventsTest do
     Gig.Store.clear(Gig.Store.Artist)
 
     {:ok, _} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
+
+    wait_for_data_storage()
 
     assert [Fixtures.artist_one()] == Gig.Store.all(Gig.Store.Artist)
   end
@@ -91,7 +89,7 @@ defmodule Gig.Monitor.NewEventsTest do
 
     assert [] == Gig.Store.all(Gig.Store.Event)
 
-    Process.sleep(15)
+    wait_for_data_storage()
 
     assert [Fixtures.event()] == Gig.Store.all(Gig.Store.Event)
   end
@@ -105,8 +103,10 @@ defmodule Gig.Monitor.NewEventsTest do
 
     assert [] == Gig.Store.all(Gig.Store.Event)
 
-    Process.sleep(15)
+    wait_for_data_storage()
 
     assert [Fixtures.event()] == Gig.Store.all(Gig.Store.Event)
   end
+
+  defp wait_for_data_storage, do: Process.sleep(30)
 end
