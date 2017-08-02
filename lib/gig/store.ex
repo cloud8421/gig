@@ -48,6 +48,10 @@ defmodule Gig.Store do
     :ets.insert(table, {obj.id, get_now(), obj})
   end
 
+  def save(table, obj, key) do
+    :ets.insert(table, {key, get_now(), obj})
+  end
+
   def clear(table) do
     :ets.delete_all_objects(table)
   end

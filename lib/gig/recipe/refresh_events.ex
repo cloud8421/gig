@@ -1,4 +1,4 @@
-defmodule Gig.Recipe.GetEvents do
+defmodule Gig.Recipe.RefreshEvents do
   @moduledoc """
   This recipe takes a location id
   and returns a list of Songkick events close to the
@@ -14,7 +14,14 @@ defmodule Gig.Recipe.GetEvents do
   @rate_limit 60
 
   @type metro_area :: pos_integer
-  @type step :: :check_rate_limit | :fetch_data | :parse_metro_area | :parse_events
+  @type step :: :check_rate_limit
+              | :fetch_data
+              | :parse_metro_area
+              | :parse_events
+              | :parse_artists
+              | :queue_releases
+              | :store_events
+
   @type assigns :: %{coords: {ApiClient.lat, ApiClient.lng},
                      response: map,
                      metro_area: metro_area,
@@ -27,7 +34,10 @@ defmodule Gig.Recipe.GetEvents do
   def steps, do: [:check_rate_limit,
                   :fetch_data,
                   :parse_metro_area,
-                  :parse_events]
+                  :parse_events,
+                  :parse_artists,
+                  :queue_releases,
+                  :store_events]
 
   @doc false
   @spec handle_result(state) :: success
@@ -97,5 +107,39 @@ defmodule Gig.Recipe.GetEvents do
            |> Map.get("event", [])
            |> Enum.map(&Event.from_api_response/1)
     {:ok, Recipe.assign(state, :events, events)}
+  end
+
+  @doc false
+  @spec parse_artists(state) :: {:ok, state}
+  def parse_artists(state) do
+    artists = state.assigns.events
+              |> Enum.flat_map(fn(e) -> e.artists end)
+              |> Enum.uniq
+    {:ok, Recipe.assign(state, :artists, artists)}
+  end
+
+  @doc false
+  @spec queue_releases(state) :: {:ok, state}
+  def queue_releases(state) do
+    state.assigns.artists
+    |> Enum.filter(fn(a) -> a.mbid end)
+    |> Enum.each(fn(a) ->
+      case Gig.Store.find(Gig.Store.Release, a.mbid) do
+        {:ok, _artist} ->
+          Gig.Store.extend(Gig.Store.Release, a.mbid)
+        _error ->
+          Gig.Release.Throttle.queue(a.mbid)
+      end
+    end)
+
+    {:ok, state}
+  end
+
+  @doc false
+  @spec store_events(state) :: {:ok, state}
+  def store_events(state) do
+    true = Gig.Store.save(Gig.Store.Event, state.assigns.events)
+
+    {:ok, state}
   end
 end

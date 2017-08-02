@@ -51,7 +51,7 @@ defmodule Gig.Release.Throttle do
   defp fetch_and_save(mbid) do
     case Gig.Recipe.GetLastRelease.run(mbid) do
       {:ok, _corr_id, release} ->
-        Gig.Store.save(Gig.Store.Release, release)
+        Gig.Store.save(Gig.Store.Release, release, mbid)
       error ->
         error
     end

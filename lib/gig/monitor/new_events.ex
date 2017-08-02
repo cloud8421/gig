@@ -7,7 +7,7 @@ defmodule Gig.Monitor.NewEvents do
 
   use GenServer
 
-  @default_running_opts [recipe_module: Gig.Recipe.GetEvents,
+  @default_running_opts [recipe_module: Gig.Recipe.RefreshEvents,
                          retry_interval: 1000 * 30, # 30 seconds
                          refresh_interval: 1000 * 60 * 60 * 12] # 12 hours
 
@@ -46,36 +46,12 @@ defmodule Gig.Monitor.NewEvents do
     retry_interval = Keyword.get(state.running_opts, :retry_interval)
 
     case recipe_module.run(lat, lng) do
-      {:ok, _correlation_id, {metro_area, events}} ->
-        save_refresh_data(events)
+      {:ok, _correlation_id, {metro_area, _events}} ->
         Process.send_after(self(), :refresh, refresh_interval)
         {:noreply, %{state | metro_area: metro_area}}
       _error ->
         Process.send_after(self(), :refresh, retry_interval)
         {:noreply, state}
     end
-  end
-
-  defp save_refresh_data(events) do
-    artists = events
-              |> Enum.flat_map(fn(e) -> e.artists end)
-              |> Enum.filter(fn(a) -> a.mbid end)
-              |> Enum.uniq
-
-    true = Gig.Store.save(Gig.Store.Event, events)
-    true = Gig.Store.save(Gig.Store.Artist, artists)
-
-    save_or_extend_releases(artists)
-  end
-
-  defp save_or_extend_releases(artists) do
-    :ok = Enum.each(artists, fn(a) ->
-      case Gig.Store.find(Gig.Store.Release, a.mbid) do
-        {:ok, _artist} ->
-          Gig.Store.extend(Gig.Store.Release, a.mbid)
-        _error ->
-          Gig.Release.Throttle.queue(a.mbid)
-      end
-    end)
   end
 end
