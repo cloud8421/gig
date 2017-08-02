@@ -14,6 +14,20 @@ defmodule Gig.Store do
     :ets.select(table, [spec])
   end
 
+  def earlier_than(table, unix_timestamp) do
+    spec = {{:"_", :"$1", :"$2"},
+            [{:"=<", :"$1", {:const, unix_timestamp}}],
+            [:"$2"]}
+    :ets.select(table, [spec])
+  end
+
+  def later_than(table, unix_timestamp) do
+    spec = {{:"_", :"$1", :"$2"},
+            [{:">", :"$1", {:const, unix_timestamp}}],
+            [:"$2"]}
+    :ets.select(table, [spec])
+  end
+
   def find(table, id) do
     case :ets.lookup(table, id) do
       [{^id, _timestamp, obj}] -> {:ok, obj}
