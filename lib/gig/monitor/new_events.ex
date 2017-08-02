@@ -64,5 +64,9 @@ defmodule Gig.Monitor.NewEvents do
 
     true = Gig.Store.save(Gig.Store.Event, events)
     true = Gig.Store.save(Gig.Store.Artist, artists)
+
+    :ok = Enum.each(artists, fn(a) ->
+      Gig.Release.Throttle.queue(a.mbid)
+    end)
   end
 end
