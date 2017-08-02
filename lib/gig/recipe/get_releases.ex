@@ -9,7 +9,13 @@ defmodule Gig.Recipe.GetReleases do
   alias Gig.Mbrainz.{ApiClient,
                      Release}
 
-  @type step :: :fetch_data | :parse_releases
+  # Setup rate limit to 50 calls per minute, as per
+  # MusicBrainz guidelines available at
+  # <https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting#User-Agent>
+  @rate_limit_scale 60_000
+  @rate_limit 50
+
+  @type step :: :check_rate_limit | :fetch_data | :parse_releases
   @type assigns :: %{id: Artist.mbid,
                      response: map,
                      releases: [Release.t]}
@@ -17,7 +23,8 @@ defmodule Gig.Recipe.GetReleases do
 
   @doc false
   @spec steps :: [step]
-  def steps, do: [:fetch_data,
+  def steps, do: [:check_rate_limit,
+                  :fetch_data,
                   :parse_releases]
 
   @doc false
@@ -44,6 +51,17 @@ defmodule Gig.Recipe.GetReleases do
   def initial_state(artist_mbid) do
     Recipe.initial_state()
     |> Recipe.assign(:id, artist_mbid)
+  end
+
+  @doc false
+  @spec check_rate_limit(state) :: {:ok, state} | {:error, {:rate_limit_reached, pos_integer}}
+  def check_rate_limit(state) do
+    case ExRated.check_rate(__MODULE__, @rate_limit_scale, @rate_limit) do
+      {:ok, _} ->
+        {:ok, state}
+      {:error, limit} ->
+        {:error, {:rate_limit_reached, limit}}
+    end
   end
 
   @doc false
