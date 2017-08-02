@@ -65,8 +65,17 @@ defmodule Gig.Monitor.NewEvents do
     true = Gig.Store.save(Gig.Store.Event, events)
     true = Gig.Store.save(Gig.Store.Artist, artists)
 
+    save_or_extend_releases(artists)
+  end
+
+  defp save_or_extend_releases(artists) do
     :ok = Enum.each(artists, fn(a) ->
-      Gig.Release.Throttle.queue(a.mbid)
+      case Gig.Store.find(Gig.Store.Release, a.mbid) do
+        {:ok, _artist} ->
+          Gig.Store.extend(Gig.Store.Release, a.mbid)
+        _error ->
+          Gig.Release.Throttle.queue(a.mbid)
+      end
     end)
   end
 end
