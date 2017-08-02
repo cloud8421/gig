@@ -9,11 +9,20 @@ defmodule Gig.Monitor.Supervisor do
   end
 
   def terminate_child(lat, lng) do
+    case find_monitor(lat, lng) do
+      {:ok, pid} ->
+        terminate_child(pid)
+      error ->
+        error
+    end
+  end
+
+  def find_monitor(lat, lng) do
     case Registry.lookup(Registry.Monitor, {lat, lng}) do
       [] ->
         {:error, :not_found}
       [{pid, _meta}] ->
-        terminate_child(pid)
+        {:ok, pid}
     end
   end
 

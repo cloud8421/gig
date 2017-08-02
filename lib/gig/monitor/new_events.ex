@@ -23,6 +23,13 @@ defmodule Gig.Monitor.NewEvents do
       type: :worker}
   end
 
+  def get_metro_area(lat, lng) do
+    GenServer.call(via(lat, lng), :get_metro_area)
+  end
+  def get_metro_area(pid) do
+    GenServer.call(pid, :get_metro_area)
+  end
+
   def via(lat, lng) do
     {:via, Registry, {Registry.Monitor, {lat, lng}}}
   end
@@ -37,6 +44,10 @@ defmodule Gig.Monitor.NewEvents do
 
     {:ok, %__MODULE__{running_opts: running_opts,
                       coords: coords}}
+  end
+
+  def handle_call(:get_metro_area, _from, state) do
+    {:reply, state.metro_area, state}
   end
 
   def handle_info(:refresh, state) do
