@@ -7,15 +7,13 @@ defmodule Gig.Monitor do
 
   use GenServer
 
-  @retry_interval   1000 * 30 # 30 seconds
-  @refresh_interval 1000 * 60 * 60 * 12 # 12 hours
+  @default_running_opts [recipe_module: Gig.Recipe.GetEvents,
+                         retry_interval: 1000 * 30, # 30 seconds
+                         refresh_interval: 1000 * 60 * 60 * 12] # 12 hours
 
-  defmodule State do
-    @moduledoc false
-
-    defstruct coords: {0, 0},
-              metro_area: nil
-  end
+  defstruct running_opts: @default_running_opts,
+            coords: {0, 0},
+            metro_area: nil
 
   def child_spec(_) do
     %{id: __MODULE__,
@@ -29,25 +27,31 @@ defmodule Gig.Monitor do
     {:via, Registry, {Registry.Monitor, {lat, lng}}}
   end
 
-  def start_link(lat, lng) do
-    GenServer.start_link(__MODULE__, {lat, lng}, name: via(lat, lng))
+  def start_link(lat, lng, opts \\ []) do
+    running_opts = Keyword.merge(@default_running_opts, opts)
+    GenServer.start_link(__MODULE__, {{lat, lng}, running_opts}, name: via(lat, lng))
   end
 
-  def init(coords) do
+  def init({coords, running_opts}) do
     send(self(), :refresh)
 
-    {:ok, %State{coords: coords}}
+    {:ok, %__MODULE__{running_opts: running_opts,
+                      coords: coords}}
   end
 
   def handle_info(:refresh, state) do
     {lat, lng} = state.coords
-    case Gig.Recipe.GetEvents.run(lat, lng) do
+    recipe_module = Keyword.get(state.running_opts, :recipe_module)
+    refresh_interval = Keyword.get(state.running_opts, :refresh_interval)
+    retry_interval = Keyword.get(state.running_opts, :retry_interval)
+
+    case recipe_module.run(lat, lng) do
       {:ok, _correlation_id, {metro_area, events}} ->
         save_refresh_data(events)
-        Process.send_after(self(), :refresh, @refresh_interval)
+        Process.send_after(self(), :refresh, refresh_interval)
         {:noreply, %{state | metro_area: metro_area}}
       _error ->
-        Process.send_after(self(), :refresh, @retry_interval)
+        Process.send_after(self(), :refresh, retry_interval)
         {:noreply, state}
     end
   end
