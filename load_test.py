@@ -1,13 +1,21 @@
 from locust import HttpLocust, TaskSet
+import random
 
-def monitor(l):
-    l.client.get("/monitor/51.50809/-0.1291379")
+lats = [random.uniform(50.0,55.0) for _ in xrange(500)]
+lngs = [random.uniform(-10.0,10.0) for _ in xrange(500)]
+
+def monitor(l, lat, lng):
+    url = "/monitor/{0}/{1}".format(lat, lng)
+    l.client.get(url)
 
 class UserBehavior(TaskSet):
-    tasks = {monitor: 1}
+    tasks = {monitor: 3}
 
     def on_start(self):
-        monitor(self)
+        # lat = random.choice(lats)
+        # lng = random.choice(lngs)
+        # self.client.get(url)
+        monitor(self, random.choice(lats), random.choice(lngs))
 
 class WebsiteUser(HttpLocust):
     task_set = UserBehavior
