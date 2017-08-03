@@ -20,3 +20,6 @@ docs:
 
 curl.monitor:
 	curl http://localhost:4000/monitor/51.50809/-0.1291379 | jq .
+
+load_test:
+	locust -f load_test.py --host=http://localhost:4000

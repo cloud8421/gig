@@ -25,3 +25,6 @@ erl_crash.dump
 
 # IEX session settings
 .iex.exs
+
+# Load test artifacts
+*.pyc
