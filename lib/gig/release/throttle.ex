@@ -36,11 +36,13 @@ defmodule Gig.Release.Throttle do
   def handle_info(:fetch, state) do
     case :queue.out(state.queue) do
       {{:value, mbid}, new_queue} ->
-        case fetch_and_save(mbid) do
-          true -> :ok
-          _error -> GenServer.cast(self(), {:queue, mbid})
-        end
-        reschedule_interval = div(@minute, state.max_per_minute)
+        {elapsed_us, :ok} = :timer.tc(fn() ->
+          case fetch_and_save(mbid) do
+            true -> :ok
+            _error -> GenServer.cast(self(), {:queue, mbid})
+          end
+        end)
+        reschedule_interval = div(@minute, state.max_per_minute) - div(elapsed_us, 1000)
         Process.send_after(self(), :fetch, reschedule_interval)
         {:noreply, %{state | queue: new_queue}}
       {:empty, _} ->
