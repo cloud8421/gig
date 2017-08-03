@@ -1,4 +1,7 @@
-.PHONY: compile test iex deps.get
+.PHONY: up compile test iex deps.get docs curl.monitor
+
+up:
+	docker-compose up
 
 compile:
 	docker-compose run gig mix compile
@@ -16,4 +19,4 @@ docs:
 	docker-compose run gig mix docs
 
 curl.monitor:
-	curl http://localhost:4000/monitor/51.50809/-0.1291379
+	curl http://localhost:4000/monitor/51.50809/-0.1291379 | jq .
