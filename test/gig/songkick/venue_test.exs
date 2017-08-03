@@ -1,5 +1,5 @@
-defmodule Gig.Songkick.VenueTest do
+defmodule Gig.VenueTest do
   use ExUnit.Case
 
-  doctest Gig.Songkick.Venue
+  doctest Gig.Venue
 end

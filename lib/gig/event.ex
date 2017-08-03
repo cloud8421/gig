@@ -4,7 +4,7 @@ defmodule Gig.Event do
   """
 
   alias Gig.{Artist,
-             Songkick.Venue}
+             Venue}
 
   defstruct id: nil,
             name: nil,
@@ -72,7 +72,7 @@ defmodule Gig.Event do
                           starts_at: %DateTime{calendar: Calendar.ISO, day: 2, hour: 18, microsecond: {0, 0}, minute: 0,
                                                month: 8, second: 0, std_offset: 0, time_zone: "Etc/UTC", utc_offset: 0,
                                                year: 2017, zone_abbr: "UTC"},
-                          venue: %Gig.Songkick.Venue{id: 37414,
+                          venue: %Gig.Venue{id: 37414,
                                                      lat: 51.5521427,
                                                      lng: -0.1422245,
                                                      name: "O2 Forum Kentish Town"}}

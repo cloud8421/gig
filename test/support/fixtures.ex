@@ -8,7 +8,7 @@ defmodule Gig.Support.Fixtures do
                         name: "Yngwie Malmsteen with Immension",
                         artists: [artist_one(), artist_two()],
                         starts_at: ~D[2017-08-02],
-                        venue: %Gig.Songkick.Venue{id: 37414,
+                        venue: %Gig.Venue{id: 37414,
                                                    lat: 51.5521427,
                                                    lng: -0.1422245,
                                                    name: "O2 Forum Kentish Town"}}

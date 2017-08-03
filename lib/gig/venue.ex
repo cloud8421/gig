@@ -1,4 +1,4 @@
-defmodule Gig.Songkick.Venue do
+defmodule Gig.Venue do
   @moduledoc """
   This module represents a Songkick venue where a gig
   takes place.
@@ -20,14 +20,14 @@ defmodule Gig.Songkick.Venue do
 
     @doc """
     Takes a map with string keys of a venue
-    and converts it to a `t:Gig.Songkick.Venue.t/0` struct.
+    and converts it to a `t:Gig.Venue.t/0` struct.
 
         iex> venue_map = %{"id" => 4114,
         ...>               "displayName" => "Nambucca",
         ...>               "lat" => 51.5609729,
         ...>               "lng" => -0.1236348}
-        iex> Gig.Songkick.Venue.from_api_response(venue_map)
-        %Gig.Songkick.Venue{id: 4114, lat: 51.5609729, lng: -0.1236348,
+        iex> Gig.Venue.from_api_response(venue_map)
+        %Gig.Venue{id: 4114, lat: 51.5609729, lng: -0.1236348,
         name: "Nambucca"}
     """
     @spec from_api_response(map) :: t
