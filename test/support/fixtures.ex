@@ -15,13 +15,13 @@ defmodule Gig.Support.Fixtures do
   end
 
   def artist_one do
-    %Gig.Songkick.Artist{id: 214430,
+    %Gig.Artist{id: 214430,
                          mbid: "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
                          name: "Yngwie Malmsteen"}
   end
 
   def artist_two do
-    %Gig.Songkick.Artist{id: 981795,
+    %Gig.Artist{id: 981795,
                          mbid: nil,
                          name: "Immension"}
   end

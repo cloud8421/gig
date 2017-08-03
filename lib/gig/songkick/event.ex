@@ -3,8 +3,8 @@ defmodule Gig.Songkick.Event do
   This module represents a Songkick event.
   """
 
-  alias Gig.Songkick.{Artist,
-                      Venue}
+  alias Gig.{Artist,
+             Songkick.Venue}
 
   defstruct id: nil,
             name: nil,
@@ -61,10 +61,10 @@ defmodule Gig.Songkick.Event do
       ...>                        "uri" => "http://www.songkick.com/metro_areas/24426-uk-london?utm_source=41376&utm_medium=partner"},
       ...>                      "uri" => "http://www.songkick.com/venues/37414-o2-forum-kentish-town?utm_source=41376&utm_medium=partner"}}
       iex> Gig.Songkick.Event.from_api_response(event_response)
-      %Gig.Songkick.Event{artists: [%Gig.Songkick.Artist{id: 214430,
+      %Gig.Songkick.Event{artists: [%Gig.Artist{id: 214430,
                                                          mbid: "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
                                                          name: "Yngwie Malmsteen"},
-                                    %Gig.Songkick.Artist{id: 981795,
+                                    %Gig.Artist{id: 981795,
                                                          mbid: nil,
                                                          name: "Immension"}],
                           id: 29280759,

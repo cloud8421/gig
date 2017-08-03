@@ -1,4 +1,4 @@
-defmodule Gig.Songkick.Artist do
+defmodule Gig.Artist do
   @moduledoc """
   This module represents a Songkick artist.
   """
@@ -10,13 +10,13 @@ defmodule Gig.Songkick.Artist do
   @type id :: pos_integer
   @type mbid :: String.t
 
-  @type t :: %__MODULE__{id: nil | Gig.Songkick.Artist.id,
+  @type t :: %__MODULE__{id: nil | Gig.Artist.id,
                          mbid: nil | mbid,
                          name: nil | String.t}
 
   @doc """
   Takes a map with string keys of a short representation
-  of an artist and converts it to a `t:Gig.Songkick.Artist.t/0` struct.
+  of an artist and converts it to a `t:Gig.Artist.t/0` struct.
 
       iex> artist_map = %{"id" => 2588971,
       ...>                "identifier" => [%{"eventsHref" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d/calendar.json",
@@ -24,8 +24,8 @@ defmodule Gig.Songkick.Artist do
       ...>                   "mbid" => "93834e82-3a0b-4ec2-a2e4-6eca0a497e6d",
       ...>                   "setlistsHref" => "http://api.songkick.com/api/3.0/artists/mbid:93834e82-3a0b-4ec2-a2e4-6eca0a497e6d/setlists.json"}],
       ...>                "displayName" => "Public Service Broadcasting"}
-      iex> Gig.Songkick.Artist.from_api_response(artist_map)
-      %Gig.Songkick.Artist{id: 2588971,
+      iex> Gig.Artist.from_api_response(artist_map)
+      %Gig.Artist{id: 2588971,
                            mbid: "93834e82-3a0b-4ec2-a2e4-6eca0a497e6d",
                            name: "Public Service Broadcasting"}
   """
