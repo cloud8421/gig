@@ -14,3 +14,6 @@ deps.get:
 
 docs:
 	docker-compose run gig mix docs
+
+curl.monitor:
+	curl http://localhost:4000/monitor/51.50809/-0.1291379
