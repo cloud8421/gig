@@ -62,20 +62,20 @@ defmodule Gig.Event do
       ...>                      "uri" => "http://www.songkick.com/venues/37414-o2-forum-kentish-town?utm_source=41376&utm_medium=partner"}}
       iex> Gig.Event.from_api_response(event_response)
       %Gig.Event{artists: [%Gig.Artist{id: 214430,
-                                                         mbid: "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
-                                                         name: "Yngwie Malmsteen"},
+                                       mbid: "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
+                                       name: "Yngwie Malmsteen"},
                                     %Gig.Artist{id: 981795,
-                                                         mbid: nil,
-                                                         name: "Immension"}],
-                          id: 29280759,
-                          name: "Yngwie Malmsteen with Immension at O2 Forum Kentish Town (August 2, 2017)",
-                          starts_at: %DateTime{calendar: Calendar.ISO, day: 2, hour: 18, microsecond: {0, 0}, minute: 0,
-                                               month: 8, second: 0, std_offset: 0, time_zone: "Etc/UTC", utc_offset: 0,
-                                               year: 2017, zone_abbr: "UTC"},
-                          venue: %Gig.Venue{id: 37414,
-                                                     lat: 51.5521427,
-                                                     lng: -0.1422245,
-                                                     name: "O2 Forum Kentish Town"}}
+                                                mbid: nil,
+                                                name: "Immension"}],
+                           id: 29280759,
+                           name: "Yngwie Malmsteen with Immension at O2 Forum Kentish Town (August 2, 2017)",
+                           starts_at: %DateTime{calendar: Calendar.ISO, day: 2, hour: 18, microsecond: {0, 0}, minute: 0,
+                                                month: 8, second: 0, std_offset: 0, time_zone: "Etc/UTC", utc_offset: 0,
+                                                year: 2017, zone_abbr: "UTC"},
+                           venue: %Gig.Venue{id: 37414,
+                                             lat: 51.5521427,
+                                             lng: -0.1422245,
+                                             name: "O2 Forum Kentish Town"}}
   """
   @spec from_api_response(map) :: t
   def from_api_response(event_map) do
