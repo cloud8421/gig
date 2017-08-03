@@ -42,12 +42,17 @@ defmodule Gig.Release.Throttle do
             _error -> GenServer.cast(self(), {:queue, mbid})
           end
         end)
-        reschedule_interval = div(@minute, state.max_per_minute) - div(elapsed_us, 1000)
+        reschedule_interval = reschedule_interval(state.max_per_minute, elapsed_us)
         Process.send_after(self(), :fetch, reschedule_interval)
         {:noreply, %{state | queue: new_queue}}
       {:empty, _} ->
         {:noreply, state}
     end
+  end
+
+  defp reschedule_interval(max_per_minute, elapsed_us) do
+    interval = div(@minute, max_per_minute) - div(elapsed_us, 1000)
+    if interval < 0, do: 0, else: interval
   end
 
   defp fetch_and_save(mbid) do
