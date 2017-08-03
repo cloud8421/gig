@@ -4,7 +4,7 @@ defmodule Gig.Support.Fixtures do
   """
 
   def event do
-    %Gig.Songkick.Event{id: 29280759,
+    %Gig.Event{id: 29280759,
                         name: "Yngwie Malmsteen with Immension",
                         artists: [artist_one(), artist_two()],
                         starts_at: ~D[2017-08-02],

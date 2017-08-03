@@ -6,8 +6,8 @@ defmodule Gig.Recipe.RefreshEvents do
   """
   use Recipe
 
-  alias Gig.Songkick.{ApiClient,
-                      Event}
+  alias Gig.{Event,
+             Songkick.ApiClient}
 
   # Setup rate limit to 60 calls per minute
   @rate_limit_scale 60_000

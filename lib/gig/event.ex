@@ -1,4 +1,4 @@
-defmodule Gig.Songkick.Event do
+defmodule Gig.Event do
   @moduledoc """
   This module represents a Songkick event.
   """
@@ -22,7 +22,7 @@ defmodule Gig.Songkick.Event do
 
   @doc """
   Takes a map with string keys of a representation
-  of an event and converts it to a `t:Gig.Songkick.Event/0` struct.
+  of an event and converts it to a `t:Gig.Event/0` struct.
 
       iex> event_response = %{"ageRestriction" => "Standing: 14+ / Balcony: 8+ (U14s must be with adult)",
       ...>                    "displayName" => "Yngwie Malmsteen with Immension at O2 Forum Kentish Town (August 2, 2017)",
@@ -60,8 +60,8 @@ defmodule Gig.Songkick.Event do
       ...>                        "id" => 24426,
       ...>                        "uri" => "http://www.songkick.com/metro_areas/24426-uk-london?utm_source=41376&utm_medium=partner"},
       ...>                      "uri" => "http://www.songkick.com/venues/37414-o2-forum-kentish-town?utm_source=41376&utm_medium=partner"}}
-      iex> Gig.Songkick.Event.from_api_response(event_response)
-      %Gig.Songkick.Event{artists: [%Gig.Artist{id: 214430,
+      iex> Gig.Event.from_api_response(event_response)
+      %Gig.Event{artists: [%Gig.Artist{id: 214430,
                                                          mbid: "8fa5d80d-37e8-4133-9d5c-6bad446c63f0",
                                                          name: "Yngwie Malmsteen"},
                                     %Gig.Artist{id: 981795,
