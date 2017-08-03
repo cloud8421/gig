@@ -13,7 +13,8 @@ defmodule Gig.Monitor.NewEvents do
 
   defstruct running_opts: @default_running_opts,
             coords: {0, 0},
-            metro_area: nil
+            metro_area: nil,
+            event_ids: []
 
   def child_spec(_) do
     %{id: __MODULE__,
@@ -28,6 +29,10 @@ defmodule Gig.Monitor.NewEvents do
   end
   def get_metro_area(pid) do
     GenServer.call(pid, :get_metro_area)
+  end
+
+  def get_event_ids(pid) do
+    GenServer.call(pid, :get_event_ids)
   end
 
   def via(lat, lng) do
@@ -50,6 +55,10 @@ defmodule Gig.Monitor.NewEvents do
     {:reply, state.metro_area, state}
   end
 
+  def handle_call(:get_event_ids, _from, state) do
+    {:reply, state.event_ids, state}
+  end
+
   def handle_info(:refresh, state) do
     {lat, lng} = state.coords
     recipe_module = Keyword.get(state.running_opts, :recipe_module)
@@ -57,9 +66,10 @@ defmodule Gig.Monitor.NewEvents do
     retry_interval = Keyword.get(state.running_opts, :retry_interval)
 
     case recipe_module.run(lat, lng) do
-      {:ok, _correlation_id, {metro_area, _events}} ->
+      {:ok, _correlation_id, {metro_area, events}} ->
         Process.send_after(self(), :refresh, refresh_interval)
-        {:noreply, %{state | metro_area: metro_area}}
+        {:noreply, %{state | metro_area: metro_area,
+                             event_ids: Enum.map(events, fn(e) -> e.id end)}}
       _error ->
         Process.send_after(self(), :refresh, retry_interval)
         {:noreply, state}

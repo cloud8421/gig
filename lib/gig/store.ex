@@ -9,23 +9,27 @@ defmodule Gig.Store do
                             read_concurrency: true])
   end
 
+  def query(table, spec) do
+    :ets.select(table, [spec])
+  end
+
   def all(table) do
     spec = {{:"_", :"_", :"$1"}, [], [:"$1"]}
-    :ets.select(table, [spec])
+    query(table, spec)
   end
 
   def earlier_than(table, unix_timestamp) do
     spec = {{:"_", :"$1", :"$2"},
             [{:"=<", :"$1", {:const, unix_timestamp}}],
             [:"$2"]}
-    :ets.select(table, [spec])
+    query(table, spec)
   end
 
   def later_than(table, unix_timestamp) do
     spec = {{:"_", :"$1", :"$2"},
             [{:">", :"$1", {:const, unix_timestamp}}],
             [:"$2"]}
-    :ets.select(table, [spec])
+    query(table, spec)
   end
 
   def find(table, id) do
@@ -33,6 +37,13 @@ defmodule Gig.Store do
       [{^id, _timestamp, obj}] -> {:ok, obj}
       [] -> {:error, :not_found}
     end
+  end
+
+  def find_many(table, ids) do
+    specs = Enum.map(ids, fn(id) ->
+      {{id, :"_", :"$1"}, [], [:"$1"]}
+    end)
+    :ets.select(table, specs)
   end
 
   def extend(table, id) do

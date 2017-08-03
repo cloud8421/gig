@@ -10,7 +10,8 @@ defmodule Gig.Application do
     children = [
       {Registry, keys: :unique, name: Registry.Monitor},
       {Gig.Release.Throttle, 50},
-      {Gig.Monitor.Supervisor, []}
+      {Gig.Monitor.Supervisor, []},
+      {Plug.Adapters.Cowboy, scheme: :http, plug: Gig.Router, options: [port: 4000]}
       # Starts a worker by calling: Gig.Worker.start_link(arg)
       # {Gig.Worker, arg},
     ]

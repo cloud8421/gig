@@ -4,6 +4,8 @@ defmodule Gig do
   for the Gig application.
   """
 
+  defdelegate find_monitor(lat, lng), to: Gig.Monitor.Supervisor
+
   def start_monitoring(lat, lng) do
     Gig.Monitor.Supervisor.start_child(lat, lng)
   end
@@ -14,11 +16,12 @@ defmodule Gig do
   end
 
   def get_metro_area(lat, lng) do
-    case Gig.Monitor.Supervisor.find_monitor(lat, lng) do
+    case find_monitor(lat, lng) do
       {:ok, pid} ->
-        {:ok, Gig.Monitor.NewEvents.get_metro_area(pid)}
+        get_metro_area(pid)
       error ->
         error
     end
   end
+  def get_metro_area(pid), do: {:ok, Gig.Monitor.NewEvents.get_metro_area(pid)}
 end

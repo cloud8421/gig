@@ -92,6 +92,13 @@ defmodule Gig.Event do
                 starts_at: starts_at}
   end
 
+  def artists_with_mbid(events) when is_list(events) do
+    Enum.flat_map(events, &artists_with_mbid/1)
+  end
+  def artists_with_mbid(event) do
+    Enum.filter(event.artists, fn(a) -> a.mbid end)
+  end
+
   defp get_artists(event_map) do
     artists_data = get_in(event_map, ["performance",
                                       Access.all(),
