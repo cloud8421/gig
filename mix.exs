@@ -16,7 +16,7 @@ defmodule Gig.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :inets, :ssl],
       mod: {Gig.Application, []},
       start_phases: [create_store_tables: []]
     ]
@@ -28,7 +28,6 @@ defmodule Gig.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpotion, "~> 3.0"},
       {:poison, "~> 3.1"},
       {:recipe, "~> 0.4.3"},
       {:ex_rated, "~> 1.3"},

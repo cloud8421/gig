@@ -6,8 +6,8 @@ defmodule Gig.Songkick.ApiClient do
 
   @base_url "http://api.songkick.com/api/3.0"
 
-  alias HTTPotion.{Response,
-                   ErrorResponse}
+  alias HTTPClient.{Response,
+                    ErrorResponse}
 
   @type lat :: float
   @type lng :: float
@@ -23,7 +23,7 @@ defmodule Gig.Songkick.ApiClient do
   end
 
   def do_get(path, params) do
-    case HTTPotion.get(@base_url <> path, query: params) do
+    case HTTPClient.get(@base_url <> path, params, []) do
       %Response{status_code: 200, body: body} ->
         Poison.decode(body)
       %Response{status_code: status_code, body: body} ->

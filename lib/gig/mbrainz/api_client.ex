@@ -6,10 +6,10 @@ defmodule Gig.Mbrainz.ApiClient do
 
   @base_url "https://musicbrainz.org/ws/2"
   @user_agent Application.get_env(:gig, :mbrainz_user_agent)
-  @headers ["User-Agent": @user_agent]
+  @headers %{"User-Agent" => @user_agent}
 
-  alias HTTPotion.{Response,
-                   ErrorResponse}
+  alias HTTPClient.{Response,
+                    ErrorResponse}
 
   @type mbid :: String.t
 
@@ -21,7 +21,7 @@ defmodule Gig.Mbrainz.ApiClient do
   end
 
   def do_get(path, params) do
-    case HTTPotion.get(@base_url <> path, query: params, headers: @headers) do
+    case HTTPClient.get(@base_url <> path, params, @headers) do
       %Response{status_code: 200, body: body} ->
         Poison.decode(body)
       %Response{status_code: status_code, body: body} ->
