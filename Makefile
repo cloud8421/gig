@@ -23,3 +23,6 @@ curl.monitor:
 
 load_test:
 	locust -f load_test.py --host=http://localhost:4000
+
+local.iex:
+	iex --name gig@localhost --cookie gig -S mix
