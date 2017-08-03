@@ -5,9 +5,9 @@ defmodule Gig.Recipe.GetReleases do
   """
   use Recipe
 
-  alias Gig.Songkick.Artist
-  alias Gig.Mbrainz.{ApiClient,
-                     Release}
+  alias Gig.{Release,
+             Mbrainz.ApiClient,
+             Songkick.Artist}
 
   # Setup rate limit to 50 calls per minute, as per
   # MusicBrainz guidelines available at

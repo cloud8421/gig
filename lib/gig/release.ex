@@ -1,4 +1,4 @@
-defmodule Gig.Mbrainz.Release do
+defmodule Gig.Release do
   @moduledoc """
   This module represents a MusicBrainz release-group. As we're not dealing with specific artifacts, this application uses "release" where on MusicBrainz it would use "release-group".
   """
@@ -17,7 +17,7 @@ defmodule Gig.Mbrainz.Release do
 
   @doc """
   Takes a map with string keys of a release and converts it to
-  a `t:Gig.Mbrainz.Release/0` struct.
+  a `t:Gig.Release/0` struct.
 
       iex> release_map = %{"disambiguation" => "",
       ...>                 "first-release-date" => "2015-02-23",
@@ -27,8 +27,8 @@ defmodule Gig.Mbrainz.Release do
       ...>                 "secondary-type-ids" => [],
       ...>                 "secondary-types" => [],
       ...>                 "title" => "The Race for Space"}
-      iex> Gig.Mbrainz.Release.from_api_response(release_map)
-      %Gig.Mbrainz.Release{id: "38d7dd30-0b1c-45f5-bde4-a0794dc0ec7c",
+      iex> Gig.Release.from_api_response(release_map)
+      %Gig.Release{id: "38d7dd30-0b1c-45f5-bde4-a0794dc0ec7c",
                            title: "The Race for Space",
                            type: "Album",
                            release_date: "2015-02-23"}
