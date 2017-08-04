@@ -6,12 +6,11 @@ defmodule Gig.Application do
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
     children = [
       {Registry, keys: :unique, name: Registry.Monitor},
       {Gig.Release.Throttle, 50},
       {Gig.Monitor.Supervisor, []},
-      {Plug.Adapters.Cowboy, scheme: :http, plug: Gig.Router, options: [port: 4000]}
+      {Plug.Adapters.Cowboy, scheme: :http, plug: Gig.Router, options: [port: server_port()]}
       # Starts a worker by calling: Gig.Worker.start_link(arg)
       # {Gig.Worker, arg},
     ]
@@ -27,5 +26,14 @@ defmodule Gig.Application do
     Gig.Store.create_table(Gig.Store.Location)
     Gig.Store.create_table(Gig.Store.Release)
     :ok
+  end
+
+  defp server_port do
+    case Application.get_env(:gig, :server_port) do
+      port when is_binary(port) ->
+        String.to_integer(port)
+      port ->
+        port
+    end
   end
 end
