@@ -17,8 +17,16 @@ defmodule Gig.Monitor.NewEventsTest do
       GenServer.start_link(__MODULE__, 0, name: __MODULE__)
     end
 
+    def call_count(pid) do
+      GenServer.call(pid, :call_count)
+    end
+
     def run(_lat, _lng) do
       GenServer.call(__MODULE__, :run)
+    end
+
+    def handle_call(:call_count, _from, count) do
+      {:reply, count, count}
     end
 
     def handle_call(:run, _from, 0) do
@@ -38,8 +46,16 @@ defmodule Gig.Monitor.NewEventsTest do
       GenServer.start_link(__MODULE__, 0, name: __MODULE__)
     end
 
+    def call_count(pid) do
+      GenServer.call(pid, :call_count)
+    end
+
     def run(_lat, _lng) do
       GenServer.call(__MODULE__, :run)
+    end
+
+    def handle_call(:call_count, _from, count) do
+      {:reply, count, count}
     end
 
     def handle_call(:run, _from, 0) do
@@ -52,39 +68,29 @@ defmodule Gig.Monitor.NewEventsTest do
     end
   end
 
-  test "tracks the metro area id" do
-    {:ok, pid} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe)
-
-    process_state = :sys.get_state(pid)
-
-    assert Fixtures.metro_area() == process_state.metro_area
-  end
-
   test "it refreshes every X seconds" do
-    {:ok, _} = RefreshRecipe.start_link()
+    {:ok, refresh_pid} = RefreshRecipe.start_link()
 
-    {:ok, pid} = NewEvents.start_link(0.1, 0.1, recipe_module: RefreshRecipe,
-                                                refresh_interval: 10)
+    {:ok, _pid} = NewEvents.start_link(0.1, 0.1, recipe_module: RefreshRecipe,
+                                                 refresh_interval: 10)
 
-    wait_for_data_storage()
+    assert 1 == RefreshRecipe.call_count(refresh_pid)
 
-    process_state = :sys.get_state(pid)
+    Process.sleep(20)
 
-    assert Fixtures.metro_area() == process_state.metro_area
+    assert 2 == RefreshRecipe.call_count(refresh_pid)
   end
 
   test "it retries in case of failure after X seconds" do
-    {:ok, _} = RetryRecipe.start_link()
+    {:ok, retry_pid} = RetryRecipe.start_link()
 
-    {:ok, pid} = NewEvents.start_link(0.1, 0.1, recipe_module: RetryRecipe,
-                                                retry_interval: 10)
+    {:ok, _pid} = NewEvents.start_link(0.1, 0.1, recipe_module: RetryRecipe,
+                                                 retry_interval: 10)
 
-    wait_for_data_storage()
+    assert 1 == RetryRecipe.call_count(retry_pid)
 
-    process_state = :sys.get_state(pid)
+    Process.sleep(20)
 
-    assert Fixtures.metro_area() == process_state.metro_area
+    assert 2 == RetryRecipe.call_count(retry_pid)
   end
-
-  defp wait_for_data_storage, do: Process.sleep(30)
 end

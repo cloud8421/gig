@@ -17,10 +17,10 @@ defmodule Gig.Recipe.RefreshEvents do
   @type step :: :check_rate_limit
               | :fetch_data
               | :parse_metro_area
-              | :store_location
               | :parse_events
               | :parse_artists
               | :queue_releases
+              | :store_location
               | :store_events
 
   @type assigns :: %{coords: {ApiClient.lat, ApiClient.lng},
@@ -35,10 +35,10 @@ defmodule Gig.Recipe.RefreshEvents do
   def steps, do: [:check_rate_limit,
                   :fetch_data,
                   :parse_metro_area,
-                  :store_location,
                   :parse_events,
                   :parse_artists,
                   :queue_releases,
+                  :store_location,
                   :store_events]
 
   @doc false
@@ -102,16 +102,6 @@ defmodule Gig.Recipe.RefreshEvents do
   end
 
   @doc false
-  @spec store_location(state) :: {:ok, state}
-  def store_location(state) do
-    %{coords: coords, metro_area: metro_area} = state.assigns
-    location = Gig.Location.new(coords, metro_area)
-    true = Gig.Store.save(Gig.Store.Location, location, coords)
-
-    {:ok, state}
-  end
-
-  @doc false
   @spec parse_events(state) :: {:ok, state}
   def parse_events(state) do
     events = state.assigns.response
@@ -146,6 +136,20 @@ defmodule Gig.Recipe.RefreshEvents do
 
     {:ok, state}
   end
+
+  @doc false
+  @spec store_location(state) :: {:ok, state}
+  def store_location(state) do
+    %{coords: coords,
+      metro_area: metro_area,
+      events: events} = state.assigns
+    event_ids = Enum.map(events, fn(e) -> e.id end)
+    location = Gig.Location.new(coords, metro_area, event_ids)
+    true = Gig.Store.save(Gig.Store.Location, location, coords)
+
+    {:ok, state}
+  end
+
 
   @doc false
   @spec store_events(state) :: {:ok, state}

@@ -13,17 +13,16 @@ defmodule Gig.Router do
   end
 
   defp get_data_for_coords(lat_string, lng_string) do
-    {lat, lng} = parse_coords(lat_string, lng_string)
+    coords = {lat, lng} = parse_coords(lat_string, lng_string)
 
-    with {:ok, pid}  <- Gig.find_monitor(lat, lng),
-         {:ok, area} <- Gig.get_metro_area(pid)
-    do
-      events = pid
-               |> get_events
-               |> Enum.map(&add_release_to_event/1)
-      Gig.View.MonitorReport.monitored(area, events)
-    else
-      {:error, :not_found} ->
+    case Gig.Store.find(Gig.Store.Location, coords) do
+      {:ok, location} ->
+        events = Gig.Store.Event
+                 |> Gig.Store.find_many(location.event_ids)
+                 |> Enum.map(&add_release_to_event/1)
+
+        Gig.View.MonitorReport.monitored(location.metro_area, events)
+      _notfound ->
         Gig.start_monitoring(lat, lng)
         Gig.View.MonitorReport.started()
     end
@@ -31,12 +30,6 @@ defmodule Gig.Router do
 
   defp parse_coords(lat_string, lng_string) do
     {String.to_float(lat_string), String.to_float(lng_string)}
-  end
-
-  defp get_events(pid) do
-    event_ids = Gig.Monitor.NewEvents.get_event_ids(pid)
-
-    Gig.Store.find_many(Gig.Store.Event, event_ids)
   end
 
   defp add_release_to_event(event) do
