@@ -17,6 +17,7 @@ defmodule Gig.Recipe.RefreshEvents do
   @type step :: :check_rate_limit
               | :fetch_data
               | :parse_metro_area
+              | :store_location
               | :parse_events
               | :parse_artists
               | :queue_releases
@@ -34,6 +35,7 @@ defmodule Gig.Recipe.RefreshEvents do
   def steps, do: [:check_rate_limit,
                   :fetch_data,
                   :parse_metro_area,
+                  :store_location,
                   :parse_events,
                   :parse_artists,
                   :queue_releases,
@@ -97,6 +99,16 @@ defmodule Gig.Recipe.RefreshEvents do
                                                  "clientLocation",
                                                  "metroAreaId"])
     {:ok, Recipe.assign(state, :metro_area, metro_area)}
+  end
+
+  @doc false
+  @spec store_location(state) :: {:ok, state}
+  def store_location(state) do
+    %{coords: coords, metro_area: metro_area} = state.assigns
+    location = Gig.Location.new(coords, metro_area)
+    true = Gig.Store.save(Gig.Store.Location, location, coords)
+
+    {:ok, state}
   end
 
   @doc false

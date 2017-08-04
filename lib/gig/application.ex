@@ -24,6 +24,7 @@ defmodule Gig.Application do
 
   def start_phase(:create_store_tables, _type, _args) do
     Gig.Store.create_table(Gig.Store.Event)
+    Gig.Store.create_table(Gig.Store.Location)
     Gig.Store.create_table(Gig.Store.Release)
     :ok
   end
