@@ -1,4 +1,4 @@
-.PHONY: up compile test iex deps.get docs curl.monitor
+.PHONY: up compile test iex deps.get docs local.monitor prod.monitor
 
 up:
 	docker-compose up
@@ -18,11 +18,14 @@ deps.get:
 docs:
 	docker-compose run gig mix docs
 
-curl.monitor:
+local.monitor:
 	curl http://localhost:4000/monitor/51.50809/-0.1291379 | jq .
+
+local.iex:
+	iex --name gig@localhost --cookie gig -S mix
 
 load_test:
 	locust -f load_test.py --host=http://localhost:4000
 
-local.iex:
-	iex --name gig@localhost --cookie gig -S mix
+prod.monitor:
+	curl $(shell heroku info -s | grep web_url | cut -d= -f2)monitor/51.50809/-0.1291379 | jq .
