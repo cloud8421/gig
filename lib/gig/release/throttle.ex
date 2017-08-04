@@ -59,6 +59,8 @@ defmodule Gig.Release.Throttle do
     case Gig.Recipe.GetLastRelease.run(mbid) do
       {:ok, _corr_id, release} ->
         Gig.Store.save(Gig.Store.Release, release, mbid)
+      {:error, :not_found} ->
+        true
       error ->
         error
     end
