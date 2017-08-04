@@ -10,6 +10,7 @@ defmodule Gig.Application do
       {Registry, keys: :unique, name: Registry.Monitor},
       {Gig.Release.Throttle, 50},
       {Gig.Monitor.Supervisor, []},
+      Gig.Sweep,
       {Plug.Adapters.Cowboy, scheme: :http, plug: Gig.Router, options: [port: server_port()]}
       # Starts a worker by calling: Gig.Worker.start_link(arg)
       # {Gig.Worker, arg},

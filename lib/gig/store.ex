@@ -18,20 +18,6 @@ defmodule Gig.Store do
     query(table, spec)
   end
 
-  def earlier_than(table, unix_timestamp) do
-    spec = {{:"_", :"$1", :"$2"},
-            [{:"=<", :"$1", {:const, unix_timestamp}}],
-            [:"$2"]}
-    query(table, spec)
-  end
-
-  def later_than(table, unix_timestamp) do
-    spec = {{:"_", :"$1", :"$2"},
-            [{:">", :"$1", {:const, unix_timestamp}}],
-            [:"$2"]}
-    query(table, spec)
-  end
-
   def find(table, id) do
     case :ets.lookup(table, id) do
       [{^id, _timestamp, obj}] -> {:ok, obj}
@@ -61,6 +47,17 @@ defmodule Gig.Store do
 
   def save(table, obj, key) do
     :ets.insert(table, {key, get_now(), obj})
+  end
+
+  def delete_earlier_than(table, unix_timestamp) do
+    spec = {{:"_", :"$1", :"_"},
+            [{:"=<", :"$1", {:const, unix_timestamp}}],
+            [:"$_"]}
+
+    objects = :ets.select(table, [spec])
+    Enum.each(objects, fn(obj) ->
+      :ets.delete_object(table, obj)
+    end)
   end
 
   def clear(table) do
