@@ -2,6 +2,9 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :recipe,
+  enable_telemetry: true
+
 config :gig,
   mbrainz_user_agent: "Gig/0.1.0 ( claudio.ortolina@erlang-solutions.com )"
 

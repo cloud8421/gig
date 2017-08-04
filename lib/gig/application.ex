@@ -16,6 +16,12 @@ defmodule Gig.Application do
       # {Gig.Worker, arg},
     ]
 
+    children = if Mix.env in [:dev, :test] do
+                 [{Metrics.Adapter.Memory, %{}} | children]
+               else
+                 children
+               end
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Gig.Supervisor]

@@ -1,8 +1,8 @@
 defmodule Gig.Recipe do
   def run(recipe_module, initial_state, run_opts \\ []) do
-    final_run_opts = Keyword.put_new(run_opts,
-                                     :enable_telemetry,
-                                     telemetry_enabled?())
+    final_run_opts = run_opts
+                     |> Keyword.put_new(:enable_telemetry, telemetry_enabled?())
+                     |> Keyword.put_new(:telemetry_module, Gig.Recipe.Metrics)
 
     Recipe.run(recipe_module, initial_state, final_run_opts)
   end

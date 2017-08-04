@@ -38,8 +38,11 @@ defmodule Gig.Release.Throttle do
       {{:value, mbid}, new_queue} ->
         {elapsed_us, :ok} = :timer.tc(fn() ->
           case fetch_and_save(mbid) do
-            true -> :ok
-            _error -> GenServer.cast(self(), {:queue, mbid})
+            true ->
+              track_queue_size(new_queue)
+              :ok
+            _error ->
+              GenServer.cast(self(), {:queue, mbid})
           end
         end)
         reschedule_interval = reschedule_interval(state.max_per_minute, elapsed_us)
@@ -64,5 +67,13 @@ defmodule Gig.Release.Throttle do
       error ->
         error
     end
+  end
+
+  defp track_queue_size(queue) do
+    size = queue
+           |> :queue.to_list
+           |> Enum.count
+
+    Metrics.counter("throttle.releases", size)
   end
 end

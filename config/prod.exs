@@ -1,7 +1,8 @@
 use Mix.Config
 
 config :gig,
-  server_port: System.get_env("PORT")
+  server_port: System.get_env("PORT"),
+  metrics_adapter: Metrics.Adapter.Graphite
 
 config :graphiter,
   writers: [heroku: [host: 'carbon.hostedgraphite.com',
