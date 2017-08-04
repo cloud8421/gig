@@ -93,4 +93,15 @@ defmodule Gig.Monitor.NewEventsTest do
 
     assert 2 == RetryRecipe.call_count(retry_pid)
   end
+
+  test "it stops after a while" do
+    {:ok, pid} = NewEvents.start_link(0.1, 0.1, recipe_module: SuccessRecipe,
+                                                stop_after: 10)
+
+    assert Process.alive?(pid)
+
+    Process.sleep(20)
+
+    refute Process.alive?(pid)
+  end
 end

@@ -7,11 +7,13 @@ defmodule Gig.Monitor.NewEvents do
 
   use GenServer
 
+  @default_stop_after 1000 * 60 * 60 * 24 # 24 hours
   @default_running_opts [recipe_module: Gig.Recipe.RefreshEvents,
                          retry_interval: 1000 * 30, # 30 seconds
-                         refresh_interval: 1000 * 60 * 60 * 12] # 12 hours
+                         refresh_interval: 1000 * 60 * 60 * 3] # 3 hours
 
   defstruct running_opts: @default_running_opts,
+            stop_ref: nil,
             coords: {0, 0}
 
   def child_spec(_) do
@@ -32,9 +34,12 @@ defmodule Gig.Monitor.NewEvents do
   end
 
   def init({coords, running_opts}) do
+    stop_after = Keyword.get(running_opts, :stop_after, @default_stop_after)
     send(self(), :refresh)
+    stop_ref = Process.send_after(self(), :stop, stop_after)
 
     {:ok, %__MODULE__{running_opts: running_opts,
+                      stop_ref: stop_ref,
                       coords: coords}}
   end
 
@@ -52,5 +57,10 @@ defmodule Gig.Monitor.NewEvents do
         Process.send_after(self(), :refresh, retry_interval)
         {:noreply, state}
     end
+  end
+
+  def handle_info(:stop, state) do
+    Process.cancel_timer(state.stop_ref)
+    {:stop, :normal, state}
   end
 end
