@@ -15,6 +15,8 @@ defmodule Gig.Router do
   defp get_data_for_coords(lat_string, lng_string) do
     coords = {lat, lng} = parse_coords(lat_string, lng_string)
 
+    Gig.start_monitoring(lat, lng)
+
     case Gig.Store.find(Gig.Store.Location, coords) do
       {:ok, location} ->
         events = Gig.Store.Event
@@ -23,7 +25,6 @@ defmodule Gig.Router do
 
         Gig.View.MonitorReport.monitored(location.metro_area, events)
       _notfound ->
-        Gig.start_monitoring(lat, lng)
         Gig.View.MonitorReport.started()
     end
   end
