@@ -7,8 +7,10 @@
   "ex2ms": {:hex, :ex2ms, "1.5.0", "19e27f9212be9a96093fed8cdfbef0a2b56c21237196d26760f11dfcfae58e97", [:mix], [], "hexpm"},
   "ex_doc": {:hex, :ex_doc, "0.16.2", "3b3e210ebcd85a7c76b4e73f85c5640c011d2a0b2f06dcdf5acdb2ae904e5084", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
   "ex_rated": {:hex, :ex_rated, "1.3.1", "a835463a2a92e7b8eb40622f3041901fd813165dc0475f9176f79d80b9a6627c", [:mix], [{:ex2ms, "~> 1.5", [hex: :ex2ms, repo: "hexpm", optional: false]}], "hexpm"},
+  "graphiter": {:hex, :graphiter, "1.0.6", "4b11f2ae7032d2bcd450954af740b074f9df5e14f7d5e09d7243638a3df04025", [], [{:supervisor3, "1.1.5", [hex: :supervisor3, repo: "hexpm", optional: false]}], "hexpm"},
   "mime": {:hex, :mime, "1.1.0", "01c1d6f4083d8aa5c7b8c246ade95139620ef8effb009edde934e0ec3b28090a", [:mix], [], "hexpm"},
   "plug": {:hex, :plug, "1.4.3", "236d77ce7bf3e3a2668dc0d32a9b6f1f9b1f05361019946aae49874904be4aed", [:mix], [{:cowboy, "~> 1.0.1 or ~> 1.1", [hex: :cowboy, repo: "hexpm", optional: true]}, {:mime, "~> 1.0", [hex: :mime, repo: "hexpm", optional: false]}], "hexpm"},
   "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], [], "hexpm"},
   "ranch": {:hex, :ranch, "1.3.2", "e4965a144dc9fbe70e5c077c65e73c57165416a901bd02ea899cfd95aa890986", [:rebar3], [], "hexpm"},
-  "recipe": {:hex, :recipe, "0.4.3", "ab5c14dfb919a348293195f0d4de8c3f9e908114728a76a7cab2d8345c156a04", [:mix], [], "hexpm"}}
+  "recipe": {:hex, :recipe, "0.4.3", "ab5c14dfb919a348293195f0d4de8c3f9e908114728a76a7cab2d8345c156a04", [:mix], [], "hexpm"},
+  "supervisor3": {:hex, :supervisor3, "1.1.5", "5f3c487a6eba23de0e64c06e93efa0eca06f40324a6412c1318c77aca6da8424", [], [], "hexpm"}}
