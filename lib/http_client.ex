@@ -24,14 +24,6 @@ defmodule HTTPClient do
     |> process_response
   end
 
-  def example_get do
-    url = "https://musicbrainz.org/ws/2/artist/8fa5d80d-37e8-4133-9d5c-6bad446c63f0"
-    params = %{inc: "release-groups", fmt: "json"}
-    headers = %{"User-Agent" => Application.get_env(:gig, :mbrainz_user_agent)}
-
-    get(url, params, headers)
-  end
-
   def process_response({:ok, result}) do
     {{_, status, _}, headers, body} = result
 
