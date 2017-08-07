@@ -29,3 +29,6 @@ load_test:
 
 prod.monitor:
 	curl http://gig.fullyforged.com/monitor/51.50809/-0.1291379 | jq .
+
+prod.load_test:
+	locust -f load_test.py --host=http://gig.fullyforged.com
