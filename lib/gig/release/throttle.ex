@@ -25,6 +25,18 @@ defmodule Gig.Release.Throttle do
     GenServer.cast(__MODULE__, {:queue, artist_mbid})
   end
 
+  def size do
+    GenServer.call(__MODULE__, :size)
+  end
+
+  def handle_call(:size, _from, state) do
+    size = state.queue
+           |> :queue.to_list
+           |> Enum.count
+
+    {:reply, size, state}
+  end
+
   def handle_cast({:queue, mbid}, state) do
     new_queue = :queue.in(mbid, state.queue)
     if :queue.is_empty(state.queue) do

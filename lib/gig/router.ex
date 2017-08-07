@@ -12,6 +12,18 @@ defmodule Gig.Router do
     send_resp(conn, 200, body)
   end
 
+  get "/status" do
+    monitor_count = Supervisor.count_children(Gig.Monitor.Supervisor).active
+    body = %{release_queue_size: Gig.Release.Throttle.size,
+             active_monitors_count: monitor_count,
+             locations_count: Gig.Store.count(Gig.Store.Location),
+             events_count: Gig.Store.count(Gig.Store.Event),
+             releases_count: Gig.Store.count(Gig.Store.Release)}
+           |> Poison.encode!
+
+    send_resp(conn, 200, body)
+  end
+
   defp get_data_for_coords(lat_string, lng_string) do
     coords = {lat, lng} = parse_coords(lat_string, lng_string)
 

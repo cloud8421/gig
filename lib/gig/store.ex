@@ -64,6 +64,10 @@ defmodule Gig.Store do
     :ets.delete_all_objects(table)
   end
 
+  def count(table) do
+    :ets.info(table, :size)
+  end
+
   def get_now do
     DateTime.utc_now
     |> DateTime.to_unix(:millisecond)
