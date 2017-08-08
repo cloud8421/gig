@@ -2,6 +2,8 @@ defmodule Gig.Router do
   use Plug.Router
 
   plug Plug.Logger
+  plug CORSPlug, origin: ["http://localhost:3449",
+                          "https://gig.fullyforged.com"]
   plug :match
   plug :dispatch
 

@@ -32,6 +32,7 @@ defmodule Gig.Mixfile do
       {:recipe, "~> 0.4.3"},
       {:ex_rated, "~> 1.3"},
       {:plug, "~> 1.4"},
+      {:cors_plug, "~> 1.4"},
       {:cowboy, "~> 1.1.0"},
       {:graphiter, "~> 1.0", only: :prod},
       {:ex_doc, "~> 0.16.1", only: :dev, runtime: false},
