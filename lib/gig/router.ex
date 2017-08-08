@@ -6,7 +6,7 @@ defmodule Gig.Router do
     plug Plug.SSL, rewrite_on: [:x_forwarded_proto]
   end
   plug CORSPlug, origin: ["http://localhost:3449",
-                          "https://gig.fullyforged.com"]
+                          "https://gig.claudio-ortolina.org"]
   plug :match
   plug :dispatch
 
