@@ -19,7 +19,7 @@ docs:
 	docker-compose run gig mix docs
 
 local.monitor:
-	curl http://localhost:4000/monitor/51.50809/-0.1291379 | jq .
+	curl --silent http://localhost:4000/monitor/51.50809/-0.1291379 | jq .
 
 local.iex:
 	iex --name gig@localhost --cookie gig -S mix
@@ -28,7 +28,10 @@ load_test:
 	locust -f load_test.py --host=http://localhost:4000
 
 prod.monitor:
-	curl http://gig.fullyforged.com/monitor/51.50809/-0.1291379 | jq .
+	curl --silent http://gig.fullyforged.com/monitor/51.50809/-0.1291379 | jq .
+
+prod.status:
+	curl --silent http://gig.fullyforged.com/status | jq .
 
 prod.load_test:
 	locust -f load_test.py --host=http://gig.fullyforged.com
