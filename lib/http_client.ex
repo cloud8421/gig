@@ -33,7 +33,7 @@ defmodule HTTPClient do
 
     %Response{status_code: status,
               headers: headers,
-              body: List.to_string(body)}
+              body: body}
   end
 
   def process_response({:error, reason}) do
