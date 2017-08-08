@@ -44,7 +44,13 @@ defmodule Gig.Router do
   end
 
   defp parse_coords(lat_string, lng_string) do
-    {String.to_float(lat_string), String.to_float(lng_string)}
+    {parse_coord(lat_string), parse_coord(lng_string)}
+  end
+
+  defp parse_coord(coord) do
+    coord
+    |> String.to_float
+    |> Float.round(5)
   end
 
   defp add_release_to_event(event) do
