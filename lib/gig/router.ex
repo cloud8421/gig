@@ -2,6 +2,9 @@ defmodule Gig.Router do
   use Plug.Router
 
   plug Plug.Logger
+  if Mix.env == :prod do
+    plug Plug.SSL, rewrite_on: [:x_forwarded_proto]
+  end
   plug CORSPlug, origin: ["http://localhost:3449",
                           "https://gig.fullyforged.com"]
   plug :match
