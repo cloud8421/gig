@@ -14,11 +14,11 @@ defmodule Gig.Router do
 
   get "/status" do
     monitor_count = Supervisor.count_children(Gig.Monitor.Supervisor).active
-    body = %{release_queue_size: Gig.Release.Throttle.size,
-             active_monitors_count: monitor_count,
-             locations_count: Gig.Store.count(Gig.Store.Location),
-             events_count: Gig.Store.count(Gig.Store.Event),
-             releases_count: Gig.Store.count(Gig.Store.Release)}
+    body = %{stores: %{locations_count: Gig.Store.count(Gig.Store.Location),
+                       events_count: Gig.Store.count(Gig.Store.Event),
+                       releases_count: Gig.Store.count(Gig.Store.Release)},
+             queues: %{releases: Gig.Release.Throttle.size},
+             active_monitors_count: monitor_count}
            |> Poison.encode!
 
     send_resp(conn, 200, body)
