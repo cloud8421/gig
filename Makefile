@@ -28,10 +28,10 @@ load_test:
 	locust -f load_test.py --host=http://localhost:4000
 
 prod.monitor:
-	curl --silent http://gig.fullyforged.com/monitor/51.50809/-0.1291379 | jq .
+	curl --silent http://gig-api.fullyforged.com/monitor/51.50809/-0.1291379 | jq .
 
 prod.status:
-	curl --silent http://gig.fullyforged.com/status | jq .
+	curl --silent http://gig-api.fullyforged.com/status | jq .
 
 prod.load_test:
-	locust -f load_test.py --host=http://gig.fullyforged.com
+	locust -f load_test.py --host=http://gig-api.fullyforged.com
