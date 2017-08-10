@@ -11,7 +11,7 @@ config :graphiter,
                      send_timeout: 5000]]
 
 config :ex_statsd,
-       host: System.get_env("DD_HOSTNAME"),
+       host: "localhost",
        port: 8125,
        namespace: "gig",
        tags: ["env:#{Mix.env}"]
