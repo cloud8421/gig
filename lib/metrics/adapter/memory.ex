@@ -16,12 +16,12 @@ defmodule Metrics.Adapter.Memory do
       start: {__MODULE__, :start_link, [state]}}
   end
 
-  def inc(name, value) do
+  def inc(name) do
     Agent.update(__MODULE__, fn(state) ->
       Map.update(state,
                  name,
-                 value,
-                 fn(current) -> current + value end)
+                 1,
+                 fn(current) -> current + 1 end)
     end)
   end
 
@@ -33,12 +33,12 @@ defmodule Metrics.Adapter.Memory do
     end)
   end
 
-  def gauge(name, value, timestamp) do
+  def gauge(name, value) do
     Agent.update(__MODULE__, fn(state) ->
       Map.update(state,
                  name,
-                 [{timestamp, value}],
-                 fn(current) -> [{timestamp, value} | current] end)
+                 [value],
+                 fn(current) -> [value | current] end)
     end)
   end
 end

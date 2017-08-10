@@ -14,7 +14,7 @@ defmodule Gig.Recipe.Metrics do
   def on_success(_step, _state, _duration), do: :ok
 
   def on_error(step, error, _state, _duration) when step in @error_steps do
-    Metrics.inc("error.#{step}", 1)
+    Metrics.inc("error.#{step}")
     :ok
   end
   def on_error(_step, _error, _state, _duration), do: :ok

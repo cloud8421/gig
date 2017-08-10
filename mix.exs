@@ -35,6 +35,7 @@ defmodule Gig.Mixfile do
       {:cors_plug, "~> 1.4"},
       {:cowboy, "~> 1.1.0"},
       {:graphiter, "~> 1.0", only: :prod},
+      {:ex_statsd, "~> 0.5.3", only: :prod},
       {:ex_doc, "~> 0.16.1", only: :dev, runtime: false},
       {:credo, "~> 0.8.1", only: :dev, runtime: false},
       {:dialyxir, "~> 0.5.0", only: :dev, runtime: false}

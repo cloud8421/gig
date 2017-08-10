@@ -3,15 +3,15 @@ defmodule Metrics.Adapter.Graphite do
 
   @behaviour Metrics.Adapter
 
-  def inc(name, value) do
-    :graphiter.incr_cast(:heroku, name, value)
+  def inc(name) do
+    :graphiter.incr_cast(:heroku, name, 1)
   end
 
   def counter(name, value) do
     :graphiter.cast(:heroku, name, value)
   end
 
-  def gauge(name, value, timestamp) do
-    :graphiter.cast(:heroku, name, value, timestamp)
+  def gauge(name, value) do
+    :graphiter.cast(:heroku, name, value)
   end
 end

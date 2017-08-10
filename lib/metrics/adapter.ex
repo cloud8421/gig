@@ -5,7 +5,7 @@ defmodule Metrics.Adapter do
   @type value :: integer | float
   @type timestamp :: integer
 
-  @callback inc(name, value) :: :ok
+  @callback inc(name) :: :ok
   @callback counter(name, value) :: :ok
-  @callback gauge(name, value, timestamp) :: :ok
+  @callback gauge(name, value) :: :ok
 end

@@ -5,10 +5,7 @@ defmodule Metrics do
                                :metrics_adapter,
                                Metrics.Adapter.Memory)
 
-  defdelegate inc(name, value), to: @adapter
+  defdelegate inc(name), to: @adapter
   defdelegate counter(name, value), to: @adapter
-
-  def gauge(name, value) do
-    @adapter.gauge(name, value, Gig.Store.get_now())
-  end
+  defdelegate gauge(name, value), to: @adapter
 end
